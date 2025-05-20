@@ -18,7 +18,11 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
-  // Configuración experimental (si es necesaria)
+  // Configuración para la exportación estáta
+  experimental: {
+    appDir: true,
+  },
+  // Configuración para rutas de imágenes y recursos
   experimental: {
     // Aquí puedes agregar configuraciones experimentales si es necesario
   },
