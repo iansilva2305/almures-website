@@ -18,19 +18,10 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
-  // Configuración para la exportación estáta
   experimental: {
     appDir: true,
   },
-  // Configuración para rutas de imágenes y recursos
-  experimental: {
-    // Aquí puedes agregar configuraciones experimentales si es necesario
-  },
-  // Configuración para rutas de imágenes y recursos
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback.fs = false;
-    }
+  webpack: (config) => {
     return config;
   },
 };

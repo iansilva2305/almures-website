@@ -2,8 +2,11 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -13,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
@@ -23,15 +26,13 @@ jobs:
         run: npm ci
         
       - name: Build
-        run: npm run build
-        
-      - name: Export
         run: |
-          mkdir -p out
-          cp -r .next/standalone/. out/
-          cp -r .next/static out/.next/
-          cp -r public out/
-          echo "This is a placeholder for your Next.js static export" > out/index.html
+          npm run build
+          npm run export
+        
+      - name: Create CNAME
+        run: |
+          echo "iansilva2305.github.io/almures-website" > out/CNAME
         
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
@@ -39,7 +40,3 @@ jobs:
           folder: out
           branch: gh-pages
           clean: true
-          clean-exclude: |
-            .git
-            .github
-            .gitignore

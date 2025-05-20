@@ -9,7 +9,7 @@
     "lint": "next lint",
     "export": "next build && next export",
     "predeploy": "next build && next export",
-    "deploy": "gh-pages -d out"
+    "deploy": "gh-pages -d out -t true"
   },
   "homepage": "https://iansilva2305.github.io/almures-website",
   "dependencies": {
