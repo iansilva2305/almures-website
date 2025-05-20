@@ -1,0 +1,105 @@
+/* Estilos globales para utilizar con Tailwind CSS */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fuentes personalizadas */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Definición de variables CSS */
+:root {
+  --primary-color: #eab308;
+  --text-color: #1f2937;
+  --bg-color: #ffffff;
+  --secondary-bg: #f3f4f6;
+  --accent-color: #3b82f6;
+}
+
+/* Tema oscuro */
+.dark {
+  --primary-color: #f59e0b;
+  --text-color: #f3f4f6;
+  --bg-color: #111827;
+  --secondary-bg: #1f2937;
+  --accent-color: #60a5fa;
+}
+
+/* Animaciones personalizadas */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Clases de utilidad personalizadas */
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-fadeDown {
+  animation: fadeDown 0.3s ease-out forwards;
+}
+
+/* Estilos de componentes */
+.aspect-w-16 {
+  position: relative;
+  padding-bottom: calc(var(--tw-aspect-h) / var(--tw-aspect-w) * 100%);
+}
+
+.aspect-h-9 {
+  --tw-aspect-h: 9;
+}
+
+.aspect-w-16 {
+  --tw-aspect-w: 16;
+}
+
+/* Mejoras para accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Estilos específicos para Next.js */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--secondary-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #9ca3af;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #6b7280;
+}
