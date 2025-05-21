@@ -25,10 +25,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
         
-      - name: Build
+      - name: Build and Export
         run: |
           npm run build
-          npm run export
+          mkdir -p out
+          cp -r .next/standalone/. out/
+          cp -r .next/static out/.next/static
+          cp -r public out/
+          cp -r .next/standalone/.next/static out/.next/
+          cp -r .next/standalone/public out/
         
       - name: Create CNAME
         run: |
