@@ -10,8 +10,5 @@ export default function Home() {
   );
 }
 
-export const generateStaticParams = async () => {
-  return [{}];
-};
-
+// Generar la página estáticamente en tiempo de compilación
 export const dynamicParams = false;
