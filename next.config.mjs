@@ -4,6 +4,9 @@ const repo = 'almures-website';
 const basePath = isProd ? `/${repo}` : '';
 const assetPrefix = isProd ? `/${repo}/` : '';
 
+// Configuración de la ruta base para las imágenes
+process.env.NEXT_PUBLIC_BASE_PATH = basePath;
+
 const nextConfig = {
   reactStrictMode: true,
   output: 'export',
