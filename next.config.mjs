@@ -11,6 +11,9 @@ const nextConfig = {
   assetPrefix: assetPrefix,
   images: {
     unoptimized: true,
+    path: `${assetPrefix}/_next/image`,
+    loader: 'custom',
+    loaderFile: './image-loader.js',
   },
   trailingSlash: true,
   distDir: 'out',
@@ -38,7 +41,50 @@ const nextConfig = {
       };
     }
     return config;
-  }
+  },
+  // Copiar archivos estáticos
+  async exportPathMap(defaultPathMap, { dev, dir, outDir, distDir, buildId }) {
+    return {
+      '/': { page: '/' },
+      '/404': { page: '/404' },
+    };
+  },
 };
+
+// Copiar archivos estáticos
+const fs = require('fs');
+const path = require('path');
+
+// Asegurarse de que el directorio de salida existe
+const outDir = path.join(process.cwd(), 'out');
+if (!fs.existsSync(outDir)) {
+  fs.mkdirSync(outDir, { recursive: true });
+}
+
+// Copiar la carpeta public al directorio de salida
+const publicDir = path.join(process.cwd(), 'public');
+if (fs.existsSync(publicDir)) {
+  const copyRecursiveSync = (src, dest) => {
+    const exists = fs.existsSync(src);
+    const stats = exists && fs.statSync(src);
+    const isDirectory = exists && stats.isDirectory();
+    
+    if (isDirectory) {
+      if (!fs.existsSync(dest)) {
+        fs.mkdirSync(dest);
+      }
+      fs.readdirSync(src).forEach(childItemName => {
+        copyRecursiveSync(
+          path.join(src, childItemName),
+          path.join(dest, childItemName)
+        );
+      });
+    } else {
+      fs.copyFileSync(src, dest);
+    }
+  };
+  
+  copyRecursiveSync(publicDir, path.join(outDir, 'images'));
+}
 
 export default nextConfig;

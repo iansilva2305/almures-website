@@ -7,38 +7,21 @@ import Image from 'next/image';
 const getImageUrl = (imageName) => {
   if (!imageName) return '';
   
-  // Eliminar cualquier ruta relativa o absoluta que pueda estar incluida
-  let cleanName = imageName.split('/').pop();
+  // Obtener solo el nombre del archivo sin la ruta
+  let cleanName = imageName.split('/').pop().trim();
   
-  // Asegurarse de que el nombre del archivo no tenga espacios al principio o al final
-  cleanName = cleanName.trim();
+  // Si ya es una URL completa, devolverla tal cual
+  if (cleanName.startsWith('http')) {
+    return cleanName;
+  }
   
-  // Codificar solo los caracteres especiales necesarios, pero mantener los signos + como están
-  // ya que son parte del nombre del archivo
-  const encodedName = cleanName
-    .replace(/%/g, '%25')  // Codificar % primero para evitar codificaciones dobles
-    .replace(/\?/g, '%3F')
-    .replace(/#/g, '%23')
-    .replace(/\[/g, '%5B')
-    .replace(/\]/g, '%5D')
-    .replace(/@/g, '%40')
-    .replace(/!/g, '%21')
-    .replace(/\$/g, '%24')
-    .replace(/&/g, '%26')
-    .replace(/'/g, '%27')
-    .replace(/\(/g, '%28')
-    .replace(/\)/g, '%29')
-    .replace(/\*/g, '%2A')
-    .replace(/,/g, '%2C')
-    .replace(/;/g, '%3B')
-    .replace(/=/g, '%3D')
-    .replace(/ /g, '+');  // Mantener los espacios como + para coincidir con los nombres de archivo
+  // Construir la ruta correcta para las imágenes
+  // En producción, usar la ruta base correcta
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  const imagePath = `${basePath}/images/${cleanName}`.replace(/\/\//g, '/');
   
-  const imageUrl = `/images/${encodedName}`;
-  console.log('URL de la imagen generada:', imageUrl);
-  console.log('Nombre de archivo original:', imageName);
-  console.log('Nombre codificado:', encodedName);
-  return imageUrl;
+  console.log('Ruta de la imagen:', imagePath);
+  return imagePath;
 };
 
 const ImageCarousel = ({ images }) => {
@@ -91,9 +74,11 @@ const ImageCarousel = ({ images }) => {
                 className="group relative aspect-square bg-gray-100 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-gray-200 dark:shadow-gray-800"
               >
                 <div className="w-full h-full">
-                  <img
+                  <Image
                     src={imageUrl}
                     alt={`Trabajo ${index + 1}`}
+                    width={800}
+                    height={800}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     onError={(e) => {
                       console.error('Error al cargar la imagen:', imageUrl);
@@ -103,6 +88,8 @@ const ImageCarousel = ({ images }) => {
                       errorDiv.textContent = 'Error al cargar';
                       e.target.parentNode.appendChild(errorDiv);
                     }}
+                    unoptimized={true}
+                    priority={index < 4} // Precarga las primeras 4 imágenes
                   />
                 </div>
               </div>
