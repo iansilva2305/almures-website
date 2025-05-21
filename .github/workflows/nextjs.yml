@@ -29,6 +29,10 @@ jobs:
         
       - name: Build
         run: |
+          # Instalar dependencias
+          npm ci
+          
+          # Construir la aplicación
           npm run build
           
           # Crear directorio de salida
@@ -36,16 +40,26 @@ jobs:
           
           # Copiar archivos generados por Next.js
           cp -r .next/standalone/. out/
+          cp -r .next/static out/.next/
+          cp -r public out/
           
-          # Asegurarse de que los directorios necesarios existan
-          mkdir -p out/.next/static
-          
-          # Copiar archivos estáticos
-          cp -r .next/static/* out/.next/static/
-          cp -r public/* out/
+          # Si no existe standalone, copiar directamente los archivos generados
+          if [ ! -d ".next/standalone" ]; then
+            cp -r .next/static out/.next/
+            cp -r public/* out/
+            cp -r .next/server out/.next/
+            cp -r .next/trace out/.next/
+            cp -r .next/cache out/.next/
+            cp -r .next/required-server-files.json out/.next/
+          fi
           
           # Crear archivo CNAME
           echo "iansilva2305.github.io/almures-website" > out/CNAME
+          
+          # Crear archivo index.html si no existe
+          if [ ! -f "out/index.html" ]; then
+            echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=/" /></head><body>Redirecting...</body></html>' > out/index.html
+          fi
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

@@ -18,6 +18,11 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
+  // Deshabilitar la generación de archivos estáticos para rutas dinámicas
+  generateBuildId: async () => 'build',
+  // Configuración para exportación estáta
+  generateStaticParams: async () => ({}),
+  // Configuración de webpack
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
