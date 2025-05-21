@@ -48,7 +48,7 @@ jobs:
           echo "iansilva2305.github.io/almures-website" > out/CNAME
         
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: 'out'
           
