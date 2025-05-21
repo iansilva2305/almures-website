@@ -1,14 +1,17 @@
-import dynamic from "next/dynamic";
+import ImageCarousel from './components/ImageCarousel';
 
-// Importar dinámicamente el componente App para evitar problemas de hidratación
-const App = dynamic(() => import("./components/App"), {
-  ssr: false,
-});
+export const dynamic = 'force-static';
 
 export default function Home() {
   return (
     <main>
-      <App />
+      <ImageCarousel />
     </main>
   );
 }
+
+export const generateStaticParams = async () => {
+  return [{}];
+};
+
+export const dynamicParams = false;

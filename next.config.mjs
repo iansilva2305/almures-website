@@ -19,7 +19,14 @@ const nextConfig = {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
   // Configuración para exportación estática
-  generateStaticParams: async () => ({}),
+  generateStaticParams: async () => ({
+    // Aquí puedes definir rutas dinámicas si es necesario
+    // Por ejemplo, para páginas dinámicas [id].js
+    // return [
+    //   { id: '1' },
+    //   { id: '2' },
+    // ];
+  }),
   // Configuración de webpack
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -31,14 +38,7 @@ const nextConfig = {
       };
     }
     return config;
-  },
-  // Configuración para la exportación estática
-  exportPathMap: async function() {
-    return {
-      '/': { page: '/' },
-      '/404': { page: '/404' },
-    };
-  },
+  }
 };
 
 export default nextConfig;
