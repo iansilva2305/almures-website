@@ -4,10 +4,10 @@ export const dynamic = 'force-static';
 
 // Imágenes predeterminadas
 const defaultImages = [
-  '/images/almuerzo1.jpg',
-  '/images/almuerzo2.jpg',
-  '/images/almuerzo3.jpg',
-  '/images/almuerzo4.jpg',
+  '/almures-website/images/almuerzo1.jpg',
+  '/almures-website/images/almuerzo2.jpg',
+  '/almures-website/images/almuerzo3.jpg',
+  '/almures-website/images/almuerzo4.jpg',
 ];
 
 export default function Home() {
