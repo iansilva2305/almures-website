@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
@@ -25,23 +27,38 @@ jobs:
       - name: Install dependencies
         run: npm ci
         
-      - name: Build and Export
+      - name: Build
         run: |
           npm run build
+          
+          # Crear directorio de salida
           mkdir -p out
+          
+          # Copiar archivos generados por Next.js
           cp -r .next/standalone/. out/
-          cp -r .next/static out/.next/static
-          cp -r public out/
-          cp -r .next/standalone/.next/static out/.next/
-          cp -r .next/standalone/public out/
-        
-      - name: Create CNAME
-        run: |
+          
+          # Asegurarse de que los directorios necesarios existan
+          mkdir -p out/.next/static
+          
+          # Copiar archivos estáticos
+          cp -r .next/static/* out/.next/static/
+          cp -r public/* out/
+          
+          # Crear archivo CNAME
           echo "iansilva2305.github.io/almures-website" > out/CNAME
         
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
         with:
-          folder: out
-          branch: gh-pages
-          clean: true
+          path: 'out'
+          
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
