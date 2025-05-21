@@ -29,28 +29,19 @@ jobs:
         
       - name: Build
         run: |
-          # Instalar dependencias
-          npm ci
-          
           # Construir la aplicación
           npm run build
           
           # Crear directorio de salida
           mkdir -p out
           
-          # Copiar archivos generados por Next.js
-          cp -r .next/standalone/. out/
+          # Copiar archivos estáticos
           cp -r .next/static out/.next/
-          cp -r public out/
+          cp -r public/* out/
           
-          # Si no existe standalone, copiar directamente los archivos generados
-          if [ ! -d ".next/standalone" ]; then
-            cp -r .next/static out/.next/
-            cp -r public/* out/
-            cp -r .next/server out/.next/
-            cp -r .next/trace out/.next/
-            cp -r .next/cache out/.next/
-            cp -r .next/required-server-files.json out/.next/
+          # Copiar archivos generados por Next.js
+          if [ -d ".next/standalone" ]; then
+            cp -r .next/standalone/. out/
           fi
           
           # Crear archivo CNAME

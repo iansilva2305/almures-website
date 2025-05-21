@@ -18,9 +18,7 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
-  // Deshabilitar la generación de archivos estáticos para rutas dinámicas
-  generateBuildId: async () => 'build',
-  // Configuración para exportación estáta
+  // Configuración para exportación estática
   generateStaticParams: async () => ({}),
   // Configuración de webpack
   webpack: (config, { isServer }) => {
@@ -33,6 +31,13 @@ const nextConfig = {
       };
     }
     return config;
+  },
+  // Configuración para la exportación estática
+  exportPathMap: async function() {
+    return {
+      '/': { page: '/' },
+      '/404': { page: '/404' },
+    };
   },
 };
 
