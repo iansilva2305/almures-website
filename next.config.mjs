@@ -51,40 +51,55 @@ const nextConfig = {
   },
 };
 
-// Copiar archivos estáticos
-const fs = require('fs');
-const path = require('path');
+// Importaciones ES modules
+import { promises as fs } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// Asegurarse de que el directorio de salida existe
-const outDir = path.join(process.cwd(), 'out');
-if (!fs.existsSync(outDir)) {
-  fs.mkdirSync(outDir, { recursive: true });
+// Obtener el directorio actual en ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Función asíncrona para copiar directorios
+async function copyDir(src, dest) {
+  await fs.mkdir(dest, { recursive: true });
+  const entries = await fs.readdir(src, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const srcPath = path.join(src, entry.name);
+    const destPath = path.join(dest, entry.name);
+
+    if (entry.isDirectory()) {
+      await copyDir(srcPath, destPath);
+    } else {
+      await fs.copyFile(srcPath, destPath);
+    }
+  }
 }
 
-// Copiar la carpeta public al directorio de salida
-const publicDir = path.join(process.cwd(), 'public');
-if (fs.existsSync(publicDir)) {
-  const copyRecursiveSync = (src, dest) => {
-    const exists = fs.existsSync(src);
-    const stats = exists && fs.statSync(src);
-    const isDirectory = exists && stats.isDirectory();
+// Función para copiar archivos estáticos
+async function copyStaticFiles() {
+  try {
+    const outDir = path.join(process.cwd(), 'out');
+    const publicDir = path.join(process.cwd(), 'public');
+    const imagesDest = path.join(outDir, 'images');
     
-    if (isDirectory) {
-      if (!fs.existsSync(dest)) {
-        fs.mkdirSync(dest);
-      }
-      fs.readdirSync(src).forEach(childItemName => {
-        copyRecursiveSync(
-          path.join(src, childItemName),
-          path.join(dest, childItemName)
-        );
-      });
-    } else {
-      fs.copyFileSync(src, dest);
+    // Crear directorio de salida si no existe
+    await fs.mkdir(outDir, { recursive: true });
+    
+    // Copiar archivos estáticos
+    if (await fs.access(publicDir).then(() => true).catch(() => false)) {
+      await copyDir(publicDir, imagesDest);
+      console.log('Archivos estáticos copiados correctamente');
     }
-  };
-  
-  copyRecursiveSync(publicDir, path.join(outDir, 'images'));
+  } catch (error) {
+    console.error('Error al copiar archivos estáticos:', error);
+  }
+}
+
+// Ejecutar la copia de archivos estáticos
+if (process.env.NODE_ENV === 'production') {
+  copyStaticFiles().catch(console.error);
 }
 
 export default nextConfig;
